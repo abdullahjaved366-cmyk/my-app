@@ -1,16 +1,17 @@
 exports.handler = async (event, context) => {
     try {
-      // You can process any frontend requests here later. 
-      // For now, it just sends a successful response back.
+      const mockDatabase = [
+        { id: 101, vehicle: "Toyota Corolla", status: "Available", rate: 40 },
+        { id: 102, vehicle: "Honda Civic", status: "Rented", rate: 45 },
+        { id: 103, vehicle: "Ford Mustang", status: "Available", rate: 80 }
+      ];
+  
       return {
         statusCode: 200,
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ 
-          success: true, 
-          message: "Backend is running successfully without a database!" 
-        }),
+        body: JSON.stringify(mockDatabase),
       };
     } catch (error) {
       return {
