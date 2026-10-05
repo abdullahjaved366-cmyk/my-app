@@ -1,0 +1,6 @@
+{
+    "name": "database-config",
+    "version": "1.0.0",
+    "description": "Database connection and schema configurations",
+    "main": "index.js"
+  }
