@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Fullstack App</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #output { margin-top: 20px; padding: 10px; background: #f4f4f4; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Frontend</h1>
+    <button onclick="fetchData()">Get Data from Backend</button>
+    
+    <div id="output">Data will appear here...</div>
+
+    <script>
+        async function fetchData() {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerText = "Loading...";
+            try {
+                // This calls your Netlify serverless backend
+                const response = await fetch('/.netlify/functions/api');
+                const data = await response.json();
+                outputDiv.innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                outputDiv.innerText = "Error connecting to backend.";
+            }
+        }
+    </script>
+</body>
+</html>
