@@ -1,33 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Fullstack App</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        #output { margin-top: 20px; padding: 10px; background: #f4f4f4; border-radius: 5px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    button { padding: 10px 15px; cursor: pointer; margin-bottom: 20px; }
+    table { width: 100%; max-width: 600px; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background-color: #f4f4f4; }
+    .available { color: green; font-weight: bold; }
+    .rented { color: red; font-weight: bold; }
+  </style>
 </head>
 <body>
-    <h1>Welcome to the Frontend</h1>
-    <button onclick="fetchData()">Get Data from Backend</button>
-    
-    <div id="output">Data will appear here...</div>
 
-    <script>
-        async function fetchData() {
-            const outputDiv = document.getElementById('output');
-            outputDiv.innerText = "Loading...";
-            try {
-                // This calls your Netlify serverless backend
-                const response = await fetch('/.netlify/functions/api');
-                const data = await response.json();
-                outputDiv.innerText = JSON.stringify(data, null, 2);
-            } catch (error) {
-                outputDiv.innerText = "Error connecting to backend.";
-            }
-        }
-    </script>
+  <h1>Welcome to the Frontend</h1>
+  <button id="fetchDataBtn">Get Data from Backend</button>
+  
+  <div id="data-container"></div>
+
+  <script>
+    document.getElementById('fetchDataBtn').addEventListener('click', async () => {
+      const container = document.getElementById('data-container');
+      container.innerHTML = "Loading data...";
+
+      try {
+        const response = await fetch('/.netlify/functions/api');
+        const data = await response.json();
+
+        // Build the HTML table
+        let tableHTML = `
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>Vehicle</th>
+              <th>Status</th>
+              <th>Rate</th>
+            </tr>
+        `;
+
+        // Loop through each item in the database array
+        data.forEach(item => {
+          const statusClass = item.status === "Available" ? "available" : "rented";
+          tableHTML += `
+            <tr>
+              <td>${item.id}</td>
+              <td>${item.vehicle}</td>
+              <td class="${statusClass}">${item.status}</td>
+              <td>$${item.rate} / day</td>
+            </tr>
+          `;
+        });
+
+        tableHTML += `</table>`;
+        container.innerHTML = tableHTML;
+
+      } catch (error) {
+        container.innerHTML = "Error loading data.";
+      }
+    });
+  </script>
 </body>
 </html>
